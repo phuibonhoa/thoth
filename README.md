@@ -42,6 +42,7 @@ class Cat < ActiveRecord::Base
 
   # :on (default [:create, :update, :destroy]) - which events should be logged
   # :only (default all attributes) - for updates, only log when these attributes are changed
+  # :except (default none) - for updates, do not log if only attributes in this list are changed
   log_events on: [:update, :destroy], only: [:mood, :name]
 end
 ```
