@@ -3,7 +3,7 @@ module Thoth
     module ControllerContext
 
       def self.included(base)
-        base.around_filter(:set_thoth_request_context)
+        base.around_action(:set_thoth_request_context)
       end
 
       def set_thoth_request_context
