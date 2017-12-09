@@ -13,7 +13,12 @@ module Thoth
       end
 
       def thoth_request_context
-        context = params.to_h
+        #>= Rails 4.2
+        if ::Rails::VERSION::MAJOR >= 5 || (::Rails::VERSION::MAJOR == 4 && ::Rails::VERSION::MINOR >= 2)
+          context = params.to_unsafe_h
+        else
+          context = params.to_h
+        end
         context[:current_user] = current_user.try(:id) if defined?(current_user)
         context
       end
