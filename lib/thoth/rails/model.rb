@@ -30,11 +30,11 @@ module Thoth
     def thoth_log_update
       return unless self.class.thoth_options[:on].include?(:update)
 
-      if self.class.thoth_options[:except].present?
-        except_options = self.class.thoth_options[:except]
-        only_options = self.class.columns.map(&:name) - except_options.map(&:to_s)
+      except_options = self.class.thoth_options[:except]
+      only_options = if except_options.present?
+        self.class.columns.map(&:name) - except_options.map(&:to_s)
       else
-        only_options = self.class.thoth_options[:only]
+        self.class.thoth_options[:only]
       end
 
       if only_options.empty? || !(only_options.map(&:to_s) & changes.keys).empty?
