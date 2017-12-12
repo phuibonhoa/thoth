@@ -9,6 +9,11 @@ module Thoth
       @timestamp_key = options.fetch(:timestamp_key, :time)
     end
 
+    #lazy load this since this class is initialized before rails' filter_parameters is set
+    def param_filter
+      @param_filter ||= ::ActionDispatch::Http::ParameterFilter.new(::Rails.application.config.filter_parameters)
+    end
+
     def log(event_name, details={}, context={})
       event_data = marshal_event(event_name, details, context)
 
@@ -21,12 +26,12 @@ module Thoth
     private
 
     def marshal_event(event_name, details, context)
-      {
+      param_filter.filter({
         event: event_name,
         timestamp_key => Time.now.utc.strftime(timestamp_format),
         context: context.reverse_merge(Thoth.context),
         details: details
-      }
+      })
     end
   end
 end
